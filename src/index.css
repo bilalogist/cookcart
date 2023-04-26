@@ -7,7 +7,71 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+
+  height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.search-box {
+
+  width: 500px;
+
+  height: 50px;
+
+  background-color: white;
+
+  border-radius: 30px;
+  border: 2px solid black;
+  display: flex;
+
+  align-items: center;
+
+  padding: 20px;
+
+}
+
+.search-box>i {
+
+  font-size: 20px;
+
+  color: #777;
+
+  cursor: pointer;
+
+}
+
+.search-box>input {
+
+  flex: 1;
+
+  height: 40px;
+
+  border: none;
+
+  outline: none;
+
+  font-size: 18px;
+
+  padding-left: 10px;
+
+
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
 }
