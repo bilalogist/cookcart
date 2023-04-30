@@ -78,7 +78,7 @@ export default function StoresModal({
       <BootstrapDialogTitle onClose={toggleModal}>
         Select Stores
       </BootstrapDialogTitle>
-      {loading && stores.length === 0 ? (
+      {loading && stores && stores.length === 0 ? (
         <Paper style={{ minWidth: 400, minHeight: 200 }}>
           <div className={"center"}>
             <CircularProgress style={{ color: "black" }} />
@@ -113,7 +113,7 @@ export default function StoresModal({
       )}
       <DialogActions>
         <Button autoFocus onClick={toggleModal}>
-          Save changes
+          Close
         </Button>
       </DialogActions>
     </BootstrapDialog>

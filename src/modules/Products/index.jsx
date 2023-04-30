@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { findItem, fetchStores } from "./service";
 import { Button } from "react-bootstrap";
 import StoresModal from "./components/Stores";
+import { useNavigate } from "react-router-dom";
+
 const Products = () => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [stores, setStores] = useState([]);
   const [selectedStores, setSelectedStores] = useState([]);
@@ -14,6 +17,9 @@ const Products = () => {
   });
 
   async function handleSearch() {
+    return navigate(
+      `/app/search?q=${search}&num=${5}&no=${JSON.stringify(selectedStores)}`
+    );
     const formData = new FormData();
     formData.append("item", search);
     formData.append("no", 2066);

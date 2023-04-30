@@ -2,7 +2,7 @@ import axios from "axios";
 import { SnackBar } from "./components";
 // const API_URL = window.location.origin;
 // const API_URL = "http://cookcart.net:82";
-const API_URL = "http://localhost";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const apiClient = async ({
   endpoint,
@@ -32,6 +32,7 @@ const apiClient = async ({
       },
     }),
   };
+  console.log(config.url);
 
   try {
     const res = await axios(config);
