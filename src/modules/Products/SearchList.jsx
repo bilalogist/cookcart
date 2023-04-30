@@ -121,7 +121,6 @@ const SearchList = (props) => {
                 style={{
                   display: "flex",
                   flexWrap: "nowrap",
-                  justifyContent: "center",
                 }}
               >
                 {Object.keys(rowData).map((storeID, index) => {
