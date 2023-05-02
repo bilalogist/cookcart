@@ -95,7 +95,7 @@ const SearchList = (props) => {
                   onClick={toggleStoresModal}
                   type="button"
                 >
-                  Stores{" "}
+                  Stores
                   {selectedStores.length > 0 && `:${selectedStores.length}`}
                 </button>
                 <button onClick={handleSearch} class="input-group-text">
@@ -109,19 +109,23 @@ const SearchList = (props) => {
             </div>
           </div>
         </div>
-        <div className="itemsList">
+        <div className="">
           {loading ? (
             <div className="center">
               <CircularProgress style={{ color: "black" }} />
             </div>
           ) : (
-            <div className="container">
+            <div
+              className="d-flex justify-content-center"
+              style={{ width: "90%", margin: "0 auto" }}
+            >
               <div
-                className=""
-                style={{
-                  display: "flex",
-                  flexWrap: "nowrap",
-                }}
+                className="d-flex flex-row flex-nowrap"
+                style={{ overflowX: "auto" }}
+                // style={{
+                //   display: "flex",
+                //   flexWrap: "nowrap",
+                // }}
               >
                 {Object.keys(rowData).map((storeID, index) => {
                   const store = rowData[storeID];
@@ -138,7 +142,8 @@ const SearchList = (props) => {
                               stores.find((st) => st.no == storeID).name}
                           </h5>
                         </ListGroup.Item>
-                        {store.map((items, index) => {
+                        {/* {store.map((items, index) => { */}
+                        {[0, 1, 2].map((items, index) => {
                           return (
                             <ListGroup.Item key={index}>
                               <div className="item-card">
