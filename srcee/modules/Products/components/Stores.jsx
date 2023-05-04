@@ -90,12 +90,9 @@ export default function StoresModal({
             {stores.map((st, key) => {
               return (
                 <FormControlLabel
-                  key={key}
                   control={
                     <Checkbox
-                      checked={
-                        !!selectedStores.find((s) => s === String(st.no))
-                      }
+                      checked={selectedStores.find((s) => s === String(st.no))}
                       onChange={(e) => handleChange(st, e)}
                     />
                   }

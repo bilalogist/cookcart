@@ -1,3 +1,4 @@
+import Products from "./modules/Products";
 import SearchList from "./modules/Products/SearchList";
 
 const routes = [

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { findItem, fetchStores, tempRes } from "./service";
+import { findItem, fetchStores } from "./service";
 import { CircularProgress } from "@mui/material";
 import { ListGroup } from "react-bootstrap";
 import ItemCard from "./components/ItemCard";
 import StoresModal from "./components/Stores";
 const SearchList = (props) => {
   const [loading, setLoading] = useState(false);
+  // const [rowData, setRowData] = useState(Data);
   const [rowData, setRowData] = useState({});
   const [search, setSearch] = useState("");
   const [selectedStores, setSelectedStores] = useState([]);
@@ -16,9 +17,10 @@ const SearchList = (props) => {
     lat: 29.735577,
     lon: -95.511747,
   });
-  // useEffect(() => {
-  //   getStoreLocators();
-  // }, []);
+
+  useEffect(() => {
+    getStoreLocators();
+  }, []);
 
   useEffect(() => {
     if (Object.keys(rowData).length > 0) {
@@ -39,7 +41,6 @@ const SearchList = (props) => {
   };
 
   async function handleSearch() {
-    return setRowData(tempRes);
     const item = search.trim().split(",");
     const no = selectedStores;
     const num = 5;
@@ -59,12 +60,12 @@ const SearchList = (props) => {
       }
       storesData[no[i]] = items;
     }
-    console.log(storesData);
     setRowData(storesData);
 
     setLoading(false);
   }
   async function getStoreLocators() {
+    console.log("Hi");
     const formData = new FormData();
     formData.append("lat", location.lat);
     formData.append("lon", location.lon);
@@ -75,18 +76,6 @@ const SearchList = (props) => {
     setStores(res.data);
   }
 
-  function handlePurchase(storeID) {
-    const data = rowData[storeID];
-    console.log("called",data);
-    if (data.length > 0) {
-      const ids = data.map((group) => {
-        return group.items[group.selected];
-      });
-      console.log(ids)
-    }
-  }
-
-  console.log("RowData", rowData);
   return (
     <>
       <div className="">
@@ -98,18 +87,18 @@ const SearchList = (props) => {
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e?.target?.value)}
-                  className="form-control"
+                  class="form-control"
                   placeholder="Search Grocery items"
                 />
                 <button
-                  className="btn btn-outline-secondary"
+                  class="btn btn-outline-secondary"
                   onClick={toggleStoresModal}
                   type="button"
                 >
                   Stores
                   {selectedStores.length > 0 && `:${selectedStores.length}`}
                 </button>
-                <button onClick={handleSearch} className="input-group-text">
+                <button onClick={handleSearch} class="input-group-text">
                   <i
                     className="fa fa-search"
                     onClick={handleSearch}
@@ -139,44 +128,31 @@ const SearchList = (props) => {
                 // }}
               >
                 {Object.keys(rowData).map((storeID, index) => {
-                  const itemsGroup = rowData[storeID];
-                  // const {selected,items} = rowData[storeID];
-                  // console.log(itemsGroup);
+                  const store = rowData[storeID];
                   return (
-                    <div className="wrapper" key={index}>
-                      <ListGroup>
+                    <div
+                      style={{
+                        minWidth: "300px",
+                      }}
+                    >
+                      <ListGroup key={index}>
                         <ListGroup.Item>
                           <h5 className="text-center storeName">
                             {stores?.length > 0 &&
                               stores.find((st) => st.no == storeID).name}
                           </h5>
                         </ListGroup.Item>
-                        {itemsGroup.map((product, index) => {
+                        {/* {store.map((items, index) => { */}
+                        {[0, 1, 2].map((items, index) => {
                           return (
                             <ListGroup.Item key={index}>
                               <div className="item-card">
-                                <ItemCard
-                                  selected={product.selected}
-                                  items={product.items}
-                                  index={index}
-                                  setRowData={setRowData}
-                                  storeID={storeID}
-                                  rowData={rowData}
-                                />
+                                <ItemCard products={items} />
                               </div>
                             </ListGroup.Item>
                           );
                         })}
-                        <ListGroup.Item>
-                        <button
-                          className="btn btn-outline-primary "
-                          onClick={() => handlePurchase(storeID)}
-                          type="button"
-                        >
-                          Purchase
-                        </button>
-                        </ListGroup.Item>
-                        </ListGroup>
+                      </ListGroup>
                     </div>
                   );
                 })}

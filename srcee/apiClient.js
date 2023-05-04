@@ -32,6 +32,7 @@ const apiClient = async ({
       },
     }),
   };
+  console.log(config.url);
 
   try {
     const res = await axios(config);
