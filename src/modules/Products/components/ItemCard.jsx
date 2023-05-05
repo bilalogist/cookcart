@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-
+import Button from "@mui/material/Button";
+import ArrowForward from "@mui/icons-material/ArrowForwardIos";
+import ArrowBack from "@mui/icons-material/ArrowBackIos";
+import DeleteIcon from "@mui/icons-material/Delete";
 const ItemCard = ({ items, selected, setRowData, rowData, index, storeID }) => {
   // const [selected, setSelected] = useState(0);
   // console.log(products);
@@ -32,11 +35,11 @@ const ItemCard = ({ items, selected, setRowData, rowData, index, storeID }) => {
     const temp = JSON.parse(JSON.stringify(rowData));
 
     const currProducts = JSON.parse(JSON.stringify(temp[storeID]));
-    
-  console.log(currProducts);
-  const removed = currProducts.splice(index,1);
-  console.log("removed", removed);
-  console.log(currProducts);
+
+    console.log(currProducts);
+    const removed = currProducts.splice(index, 1);
+    console.log("removed", removed);
+    console.log(currProducts);
 
     temp[storeID] = currProducts;
 
@@ -70,9 +73,25 @@ const ItemCard = ({ items, selected, setRowData, rowData, index, storeID }) => {
         </div>
 
         <div className="footer">
-          <p onClick={() => handleChange(false)}>{"Previous"}</p>
-          <p onClick={handleDelete}>{"Delete"}</p>
-          <p onClick={() => handleChange(true)}>{"Next"}</p>
+          <Button
+            variant="text"
+            onClick={() => handleChange(false)}
+            disabled={selected - 1 < 0}
+            // style={{ color: selected - 1 < 0 ? "lightgray" : "" }}
+          >
+            <ArrowBack />
+          </Button>
+          <Button variant="text" onClick={handleDelete}>
+            <DeleteIcon />
+          </Button>
+          <Button
+            variant="text"
+            onClick={() => handleChange(true)}
+            disabled={selected + 1 >= items.length}
+            // style={{ color: selected + 1 >= items.length ? "lightgray" : "" }}
+          >
+            <ArrowForward />
+          </Button>
         </div>
       </div>
     </div>

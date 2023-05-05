@@ -5,6 +5,7 @@ import { CircularProgress } from "@mui/material";
 import { ListGroup } from "react-bootstrap";
 import ItemCard from "./components/ItemCard";
 import StoresModal from "./components/Stores";
+import { SnackBar } from "../../components";
 const SearchList = (props) => {
   const [loading, setLoading] = useState(false);
   const [rowData, setRowData] = useState({});
@@ -16,9 +17,9 @@ const SearchList = (props) => {
     lat: 29.735577,
     lon: -95.511747,
   });
-  // useEffect(() => {
-  //   getStoreLocators();
-  // }, []);
+  useEffect(() => {
+    getStoreLocators();
+  }, []);
 
   useEffect(() => {
     if (Object.keys(rowData).length > 0) {
@@ -39,7 +40,15 @@ const SearchList = (props) => {
   };
 
   async function handleSearch() {
-    return setRowData(tempRes);
+    if (selectedStores?.length <= 0) {
+      return SnackBar("error", "Please select store first.");
+    }
+
+    if (search.split("").length <= 0) {
+      return SnackBar("error", "Please enter something to search.");
+    }
+
+    // return setRowData(tempRes);
     const item = search.trim().split(",");
     const no = selectedStores;
     const num = 5;
@@ -55,7 +64,7 @@ const SearchList = (props) => {
         formData.append("num", num); //change later
         const res = await findItem(formData);
 
-        items.push(res?.data);
+        items.push({ items: res?.data, selected: 0 });
       }
       storesData[no[i]] = items;
     }
@@ -77,12 +86,12 @@ const SearchList = (props) => {
 
   function handlePurchase(storeID) {
     const data = rowData[storeID];
-    console.log("called",data);
+    console.log("called", data);
     if (data.length > 0) {
       const ids = data.map((group) => {
         return group.items[group.selected];
       });
-      console.log(ids)
+      console.log(ids);
     }
   }
 
@@ -148,7 +157,7 @@ const SearchList = (props) => {
                         <ListGroup.Item>
                           <h5 className="text-center storeName">
                             {stores?.length > 0 &&
-                              stores.find((st) => st.no == storeID).name}
+                              stores?.find((st) => st.no == storeID).name}
                           </h5>
                         </ListGroup.Item>
                         {itemsGroup.map((product, index) => {
@@ -168,15 +177,15 @@ const SearchList = (props) => {
                           );
                         })}
                         <ListGroup.Item>
-                        <button
-                          className="btn btn-outline-primary "
-                          onClick={() => handlePurchase(storeID)}
-                          type="button"
-                        >
-                          Purchase
-                        </button>
+                          <button
+                            className="btn btn-lg btn-block btn-outline-secondary "
+                            onClick={() => handlePurchase(storeID)}
+                            type="button"
+                          >
+                            Purchase
+                          </button>
                         </ListGroup.Item>
-                        </ListGroup>
+                      </ListGroup>
                     </div>
                   );
                 })}
