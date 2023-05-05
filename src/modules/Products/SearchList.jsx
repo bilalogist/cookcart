@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
 import { findItem, fetchStores, tempRes } from "./service";
 import { CircularProgress } from "@mui/material";
 import { ListGroup } from "react-bootstrap";
 import ItemCard from "./components/ItemCard";
 import StoresModal from "./components/Stores";
 import { SnackBar } from "../../components";
+import Button from "@mui/material/Button";
+
 const SearchList = (props) => {
   const [loading, setLoading] = useState(false);
   const [rowData, setRowData] = useState({});
@@ -40,6 +41,8 @@ const SearchList = (props) => {
   };
 
   async function handleSearch() {
+    // return setRowData(tempRes);
+
     if (selectedStores?.length <= 0) {
       return SnackBar("error", "Please select store first.");
     }
@@ -48,7 +51,6 @@ const SearchList = (props) => {
       return SnackBar("error", "Please enter something to search.");
     }
 
-    // return setRowData(tempRes);
     const item = search.trim().split(",");
     const no = selectedStores;
     const num = 5;
@@ -86,14 +88,35 @@ const SearchList = (props) => {
 
   function handlePurchase(storeID) {
     const data = rowData[storeID];
-    console.log("called", data);
     if (data.length > 0) {
       const ids = data.map((group) => {
         return group.items[group.selected];
       });
-      console.log(ids);
     }
   }
+
+  function getSelectedItems(storeID) {
+    const data = rowData[storeID];
+
+    if (data?.length > 0) {
+      const ids = data.map((group) => {
+        return group.items[group.selected];
+      });
+      return ids;
+    } else return [];
+  }
+
+  const calcTotal = useMemo(() => {
+    return (storeID) => {
+      const items = getSelectedItems(storeID);
+      const sum = items.reduce((a, b) => {
+        console.log(a, b);
+        return a + parseFloat(b?.price);
+      }, 0);
+
+      return sum;
+    };
+  }, [rowData]);
 
   console.log("RowData", rowData);
   return (
@@ -149,44 +172,49 @@ const SearchList = (props) => {
               >
                 {Object.keys(rowData).map((storeID, index) => {
                   const itemsGroup = rowData[storeID];
-                  // const {selected,items} = rowData[storeID];
-                  // console.log(itemsGroup);
+                  console.log(itemsGroup);
                   return (
-                    <div className="wrapper" key={index}>
-                      <ListGroup>
-                        <ListGroup.Item>
-                          <h5 className="text-center storeName">
-                            {stores?.length > 0 &&
-                              stores?.find((st) => st.no == storeID).name}
-                          </h5>
-                        </ListGroup.Item>
-                        {itemsGroup.map((product, index) => {
-                          return (
-                            <ListGroup.Item key={index}>
-                              <div className="item-card">
-                                <ItemCard
-                                  selected={product.selected}
-                                  items={product.items}
-                                  index={index}
-                                  setRowData={setRowData}
-                                  storeID={storeID}
-                                  rowData={rowData}
-                                />
-                              </div>
-                            </ListGroup.Item>
-                          );
-                        })}
-                        <ListGroup.Item>
-                          <button
-                            className="btn btn-lg btn-block btn-outline-secondary "
-                            onClick={() => handlePurchase(storeID)}
-                            type="button"
-                          >
-                            Purchase
-                          </button>
-                        </ListGroup.Item>
-                      </ListGroup>
-                    </div>
+                    itemsGroup.length > 0 && (
+                      <div className="wrapper" key={index}>
+                        <ListGroup>
+                          <ListGroup.Item>
+                            <h5 className="text-center storeName">
+                              {stores?.length > 0 &&
+                                stores?.find((st) => st.no == storeID).name}
+                            </h5>
+                          </ListGroup.Item>
+                          {itemsGroup.map((product, index) => {
+                            return (
+                              <ListGroup.Item key={index}>
+                                <div className="item-card">
+                                  <ItemCard
+                                    selected={product.selected}
+                                    items={product.items}
+                                    index={index}
+                                    setRowData={setRowData}
+                                    storeID={storeID}
+                                    rowData={rowData}
+                                  />
+                                </div>
+                              </ListGroup.Item>
+                            );
+                          })}
+                          <ListGroup.Item>
+                            <div className="d-flex justify-content-around align-items-baseline">
+                              <Button
+                                // className="btn btn-lg btn-block btn-outline-secondary "
+                                onClick={() => handlePurchase(storeID)}
+                                type="button"
+                                // variant="Text"
+                              >
+                                Purchase
+                              </Button>
+                              <h5>${Number(calcTotal(storeID)).toFixed(2)}</h5>
+                            </div>
+                          </ListGroup.Item>
+                        </ListGroup>
+                      </div>
+                    )
                   );
                 })}
               </div>
@@ -202,6 +230,7 @@ const SearchList = (props) => {
           open={storesModal}
           toggleModal={toggleStoresModal}
           loading={loading}
+          getStoreLocators={getStoreLocators}
         />
       )}
     </>

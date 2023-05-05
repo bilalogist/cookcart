@@ -62,6 +62,7 @@ export default function StoresModal({
   setSelectedStores,
   selectedStores,
   loading,
+  getStoreLocators,
 }) {
   const handleChange = (st, e) => {
     const id = String(st.no);
@@ -78,13 +79,13 @@ export default function StoresModal({
       <BootstrapDialogTitle onClose={toggleModal}>
         Select Stores
       </BootstrapDialogTitle>
-      {loading && stores && stores.length === 0 ? (
+      {loading ? (
         <Paper style={{ minWidth: 400, minHeight: 200 }}>
           <div className={"center"}>
             <CircularProgress style={{ color: "black" }} />
           </div>
         </Paper>
-      ) : (
+      ) : stores && stores.length > 0 ? (
         <DialogContent dividers>
           <FormGroup>
             {stores.map((st, key) => {
@@ -113,6 +114,15 @@ export default function StoresModal({
             })}
           </FormGroup>
         </DialogContent>
+      ) : (
+        <Paper style={{ minWidth: 400, minHeight: 200 }}>
+          <div className={"center"}>
+            <p>No Stores Found</p>
+          </div>
+          <div className={"center"}>
+            <Button onClick={getStoreLocators}>Fetch Stores</Button>
+          </div>
+        </Paper>
       )}
       <DialogActions>
         <Button autoFocus onClick={toggleModal}>
