@@ -87,11 +87,16 @@ const SearchList = (props) => {
   }
 
   function handlePurchase(storeID) {
-    const data = rowData[storeID];
-    if (data.length > 0) {
-      const ids = data.map((group) => {
-        return group.items[group.selected];
+    const quantity = 1;
+    const items = getSelectedItems(storeID);
+    if (items.length > 0) {
+      let itemIds = "";
+
+      items.map((i) => {
+        itemIds += `${i.itemid}|${quantity},`;
       });
+      let url = `https://goto.walmart.com/c/3955822/568844/9383?veh=aff&sourceid=imp_000011112222333344&u=http://affil.walmart.com/cart/addToCart?items=${itemIds}`;
+      window.open(url);
     }
   }
 
